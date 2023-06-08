@@ -206,6 +206,25 @@ namespace LibGit2Sharp.Core
             }
         }
 
+        public static unsafe void git_branch_set_upstream(ReferenceHandle branch, string upstreamName)
+        {
+            int res = NativeMethods.git_branch_set_upstream(branch, upstreamName);
+            Ensure.ZeroResult(res);
+        }
+
+        public static unsafe ReferenceHandle git_branch_upstream(ReferenceHandle branch)
+        {
+            git_reference* ref_out;
+            int res = NativeMethods.git_branch_upstream(out ref_out, branch);
+            if (res == (int)GitErrorCode.NotFound)
+            {
+                return null;
+            }
+
+            Ensure.ZeroResult(res);
+            return new ReferenceHandle(ref_out, true);
+        }
+
         #endregion
 
         #region git_buf_
